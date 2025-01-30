@@ -1,11 +1,8 @@
 use round::round;
-use std::env;
 use std::fs::read_to_string;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-
-    for drive in args.iter().skip(1) {
+    for drive in ["nvme0n1"] {
         let drive_stats: String =
             read_to_string(format!("/sys/block/{}/stat", drive)).expect("error");
 
