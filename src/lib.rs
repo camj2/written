@@ -129,12 +129,12 @@ impl ProcDiskStats {
         collection
     }
 
-    pub fn data_written(&self) -> Option<u64> {
+    pub fn bytes_written(&self) -> Option<u64> {
         let sector_size = SectorSize::from_name(&self.device_name)?;
 
-        let disk_write_total: u64 = self.stats.sectors_written * sector_size.logical_block_size;
+        let bytes: u64 = self.stats.sectors_written * sector_size.logical_block_size;
 
-        Some(disk_write_total)
+        Some(bytes)
 
         // println!("{}: {}", &self.device_name, disk_write_total);
     }

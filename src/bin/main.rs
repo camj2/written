@@ -3,7 +3,7 @@ use written::ProcDiskStats;
 
 fn main() {
     for stats in ProcDiskStats::get() {
-        if let Some(bytes) = stats.data_written() {
+        if let Some(bytes) = stats.bytes_written() {
             if bytes == 0 {
                 continue;
             }
