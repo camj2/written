@@ -1,0 +1,18 @@
+[package]
+name = "written"
+version = "0.2.0"
+description = "Display disk write total."
+authors = ["Cameron Jackson <dev@camj.me>"]
+repository = "https://git.camj.me/written"
+license = "MIT"
+edition = "2024"
+
+[[bin]]
+name = "written"
+path = "src/bin/main.rs"
+
+[profile.release]
+strip = true
+
+[dependencies]
+bytesize = "2.7.0"
