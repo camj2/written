@@ -2,6 +2,13 @@
 
 Display disk write total (Linux).
 
+## TO-DO:
+
+* Use box dyn type for all 20 /proc/diskstats fields
+* Use From and or FromStr method
+* Use [u64; 17] for io_stats fields, or, box type like above
+* Add clap support '-r' option for disk read total, consider supporting other fields
+
 ## Usage
 
 ```sh
