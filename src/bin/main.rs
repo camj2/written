@@ -2,12 +2,12 @@ use bytesize::ByteSize;
 use written::ProcDiskStats;
 
 fn main() {
-    for stats in ProcDiskStats::get() {
-        if let Some(bytes) = stats.bytes_written() {
-            if bytes == 0 {
-                continue;
-            }
-            println!("{}: {}", stats.device_name, ByteSize(bytes));
+    for block_device in ProcDiskStats::collect() {
+        if block_device.is_loop() {
+            continue;
+        }
+        if let Some(bytes) = block_device.bytes_written() {
+            println!("{}: {}", block_device.device_name, ByteSize(bytes));
         }
     }
 }

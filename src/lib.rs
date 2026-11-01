@@ -1,22 +1,12 @@
 use std::fs;
-// use std::os::unix::fs;s
-
-use std::collections::BTreeMap;
-
-use std::env;
-use std::fmt;
-use std::io::Write;
-use std::path::{Path, PathBuf};
-// round crate or build own solution
-// bytes to mb crate or build own solution
 
 // https://www.kernel.org/doc/html/latest/admin-guide/iostats.html
 
 pub struct ProcDiskStats {
     pub major_device_number: u64, // Field Prefix 1
     pub minor_device_number: u64, // Field Prefix 2
-    pub device_name: String,        // Field Prefix 3
-    pub stats: DiskStats,           // Field 1-17
+    pub device_name: String,      // Field Prefix 3
+    pub stats: DiskStats,         // Field 1-17
 }
 
 pub struct DiskStats {
@@ -40,18 +30,22 @@ pub struct DiskStats {
 }
 
 pub struct SectorSize {
-    logical_block_size: u64,
-    physical_block_size: u64,
+    pub logical_block_size: u64,
+    pub physical_block_size: u64,
 }
 
 impl SectorSize {
-    pub fn from_name<T: fmt::Display>(device: T) -> Option<Self> {
+    pub fn from_name(device: &str) -> Option<Self> {
         let path = format!("/sys/block/{device}/queue/logical_block_size");
+
         let file_contents = fs::read_to_string(&path).ok()?;
+
         let logical_block_size: u64 = file_contents.trim().parse().ok()?;
 
         let path = format!("/sys/block/{device}/queue/physical_block_size");
+
         let file_contents = fs::read_to_string(&path).ok()?;
+
         let physical_block_size: u64 = file_contents.trim().parse().ok()?;
 
         Some(Self {
@@ -106,7 +100,7 @@ impl DiskStats {
 impl ProcDiskStats {
     // pub fn from(fields: &[str]) -> Self {}
 
-    pub fn get() -> Vec<Self> {
+    pub fn collect() -> Vec<Self> {
         let file_contents = fs::read_to_string("/proc/diskstats").expect("File should exist.");
 
         let mut collection: Vec<Self> = Vec::new();
@@ -127,6 +121,13 @@ impl ProcDiskStats {
             collection.push(entry);
         }
         collection
+    }
+
+    pub fn is_loop(&self) -> bool {
+        match self.major_device_number {
+            7 => true,
+            _ => false,
+        }
     }
 
     pub fn bytes_written(&self) -> Option<u64> {
